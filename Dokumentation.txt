@@ -1,9 +1,9 @@
-Beim meinem CPP Projekt handelt es sich um eine erweiterbare Version von TickTackToe, bei dem die Größe des Feldes
+Beim meinem CPP Projekt handelt es sich um eine erweiterbare Version von TickTackToe (BIGTackToe), bei dem die Größe des Feldes
 und die Länge der Reihe/Diagonale/Spalte. um zu gewinnen, angepasst werden können.
 
 Im Main des Programms werden im Header UserInterface ausgelagerte Funktionen für ein Menü aufgerufen, mit welchem ein Spiel gestartet werden kann, Bots iterativ
 auf Winrate getestet werden können oder Einstellungen bezüglich fieldSize und winSize getroffen werden können. Diese werden im Namespace staticData abgespeichert
-und können durch einen Header einfach in Klassen inkludiert werden, ohne dass alle Methoden diese übergeben müssen.
+und können durch einen Header einfach in Klassen inkludiert werden, ohne dass diese durch Konstruktoren/ Vetter übergeben werden müssen.
 Mit der Klasse GameControl mit der Methode startGame() kann ein neues Spiel gestartet werden, welches den kompletten Spielablauf regelt und
 schließlich den Gewinner zurückgibt.
 Für den Spielablauf benötigt GameControl das Spielfeld der Klasse Field, welches aus einem 2D-Vektor (da flexible Größe des Feldes) und
