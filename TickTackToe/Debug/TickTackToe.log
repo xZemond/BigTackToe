@@ -1,0 +1,5 @@
+﻿  SmartBot.cpp
+  UserInterface.cpp
+  Generating Code...
+C:\Users\tkraemer\source\repos\TickTackToe\TickTackToe\UserInterface.cpp(202,22): warning C4018:  '<': signed/unsigned mismatch
+  TickTackToe.vcxproj -> C:\Users\tkraemer\source\repos\TickTackToe\Debug\TickTackToe.exe
