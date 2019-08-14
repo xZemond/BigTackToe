@@ -1,0 +1,41 @@
+Beim meinem CPP Projekt handelt es sich um eine erweiterbare Version von TickTackToe, bei dem die Größe des Feldes
+und die Länge der Reihe/Diagonale/Spalte. um zu gewinnen, angepasst werden kann.
+
+Das Programm besteht aus der Klasse GameControl, die im main aufgerufen wird, den kompletten spielablauf regelt und 
+schließlich den Gewinner zurückgibt.
+Für den Spielablauf benötigt GameControl ein Spielfeld aus der Klasse, welches aus einem 2d-vektor besteht (da flexible Größe).
+Diese besitzt zusätzlich eine Liste mit Tupeln der noch freien Feldern und eine Print-Methode.
+Desweiteren benötigt GameControl 2 Spieler. Diese können beim erstellen eines Spiels übergeben werden. Da ein Consolen-Input,
+und 3 Bots implementiert sind, sind diese unter der Elternklasse Player zusammengefasst, welche deren Team, das
+Spielfeld und die virtuelle Methode move() enthält (sie gibt immer ein Tupel der Koordinaten zurück), welche von den Subklassen überschrieben wird:
+Human: Konsoleneingabe
+StupidBot: Wählt das erste Element der BlankList -> setzt immer möglichst weit links
+RandomBot: Wählt ein zufälliges Element der BlankList -> setzt zufällig
+SmartBot: Kopiert das Feld und testet erst für jedes Element der BlankList, ob er mit diesem gewinnen kann und setzt in diesem Fall
+	  Daraufhin testet er auf gleiche Weise ober der Gegner in einem Zug gewinnen kann, und verhindert es in diesem Fall
+	  Trifft keine der beiden Fälle auf kann er entweder zufällig (RandomBot) oder in einer Reihenfolge(StupidBot, aber rückwärts)
+	  In Reihenfolge hat hierbei eine etwas höhere Gewinnchance gegen Bots, ist aber für Menschen sehr durchaschaubar.
+	  Zufällig ist die Gewinnchance gegen Bots etwas geringer, dafür ist er gegen Menschen sehr viel besser 
+	  (Dies kann nur durch den Return-Wert der SmartBot->move() Methode gewechselt werden. Alternativ hätte natürlich eine
+	   neue klasse erstellt werden können, die sich nur in Namen und Return-Wert unterscheidet)
+	  Da die Chancen auf ein Draw bei TickTackToe sehr hoch sind (vor allem falls winSize = fieldSize und große Felder), werden diese bei der Gewinnquote 
+	  nicht mitberechnet.
+	  PS: Der SmartBot kann ürigens nur durch eine Zwickmühle geschlagen werden
+
+hierbei wird ziehen die Spieler immer abwechselnd, bis 
+	1. ein Draw eingetreten ist (alle Felder voll
+   oder 2. ein Spieler gewonnen hat
+Dies wird durch den namespace CheckWin überprüft (namespace, da die Methode sowohl in GameControl als auch beim SmartBot benötigt wird
+und kein zusätzliches Objekt hierfür benötigt wird). Dieser überprüft das Feld an der gesetzen Position nach Reihen/Spalten/Diagonalen, 
+und beendet bei einer Folge, die der winSize entspricht, das Spiel.
+
+Die Benutzung des Programms ist durch ein Konsolenmenü geregelt und selbsterklären. Statische Daten wie fieldSize sind desweiteren im
+StaticData-namespace durch einen Header abrufbar, damit sie nicht an jedes Objekt übergeben werden müssen.
+Zusätzlich gibt es ein Unit-Tests, welche im Test-Projekt ausgeführt werden können.
+
+Reminder: 
+Da der SmartBot nicht wirklich effizient arbeitet (er geht ja alle freien Felder einmal durch und überprüft die WinCondition), dauert es
+ für große Felder (8+), eine hohe Anzahl an Iterationen enstprechend lange bis die Ergebnisse eines bot-tests fertig sind 
+(bei 10x10, 1000 Iterations ~20min). Dementsprechend dauert auch das Test-File einige Minuten, da es von 3x3 bis 6x6 testet
+
+
