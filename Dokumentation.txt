@@ -1,41 +1,45 @@
-Beim meinem CPP Projekt handelt es sich um eine erweiterbare Version von TickTackToe, bei dem die Größe des Feldes
-und die Länge der Reihe/Diagonale/Spalte. um zu gewinnen, angepasst werden kann.
+Beim meinem CPP Projekt handelt es sich um eine erweiterbare Version von TickTackToe, bei dem die GrÃ¶ÃŸe des Feldes
+und die LÃ¤nge der Reihe/Diagonale/Spalte. um zu gewinnen, angepasst werden kÃ¶nnen.
 
-Das Programm besteht aus der Klasse GameControl, die im main aufgerufen wird, den kompletten spielablauf regelt und 
-schließlich den Gewinner zurückgibt.
-Für den Spielablauf benötigt GameControl ein Spielfeld aus der Klasse, welches aus einem 2d-vektor besteht (da flexible Größe).
-Diese besitzt zusätzlich eine Liste mit Tupeln der noch freien Feldern und eine Print-Methode.
-Desweiteren benötigt GameControl 2 Spieler. Diese können beim erstellen eines Spiels übergeben werden. Da ein Consolen-Input,
-und 3 Bots implementiert sind, sind diese unter der Elternklasse Player zusammengefasst, welche deren Team, das
-Spielfeld und die virtuelle Methode move() enthält (sie gibt immer ein Tupel der Koordinaten zurück), welche von den Subklassen überschrieben wird:
-Human: Konsoleneingabe
-StupidBot: Wählt das erste Element der BlankList -> setzt immer möglichst weit links
-RandomBot: Wählt ein zufälliges Element der BlankList -> setzt zufällig
-SmartBot: Kopiert das Feld und testet erst für jedes Element der BlankList, ob er mit diesem gewinnen kann und setzt in diesem Fall
+Im Main des Programms werden im Header UserInterface ausgelagerte Funktionen fÃ¼r ein MenÃ¼ aufgerufen, mit welchem ein Spiel gestartet werden kann, Bots iterativ
+auf Winrate getestet werden kÃ¶nnen oder Einstellungen bezÃ¼glich fieldSize und winSize getroffen werden kÃ¶nnen. Diese werden im Namespace staticData abgespeichert
+und kÃ¶nnen durch einen Header einfach in Klassen inkludiert werden, ohne dass alle Methoden diese Ã¼bergeben mÃ¼ssen.
+Mit der Klasse GameControl mit der Methode startGame() kann ein neues Spiel gestartet werden, welches den kompletten Spielablauf regelt und
+schlieÃŸlich den Gewinner zurÃ¼ckgibt.
+FÃ¼r den Spielablauf benÃ¶tigt GameControl das Spielfeld der Klasse Field, welches aus einem 2D-Vektor (da flexible GrÃ¶ÃŸe des Feldes) und
+einer Liste mit Tupeln der noch freien Feldern besteht.
+Desweiteren benÃ¶tigt GameControl 2 Spieler der Klasse Player. Diese werden beim Erstellen eines Spiels Ã¼bergeben werden. Die Klasse Player besitzt die vier Subklassen,
+welche die virtuelle Methode move() Ã¼berschreiben:
+StupidBot: WÃ¤hlt das erste Element der BlankList -> setzt immer mÃ¶glichst weit links
+RandomBot: WÃ¤hlt ein zufÃ¤lliges Element der BlankList -> setzt zufÃ¤llig
+SmartBot: Kopiert das Feld und testet erst fÃ¼r jedes Element der BlankList, ob er mit diesem gewinnen kann und setzt in diesem Fall
 	  Daraufhin testet er auf gleiche Weise ober der Gegner in einem Zug gewinnen kann, und verhindert es in diesem Fall
-	  Trifft keine der beiden Fälle auf kann er entweder zufällig (RandomBot) oder in einer Reihenfolge(StupidBot, aber rückwärts)
-	  In Reihenfolge hat hierbei eine etwas höhere Gewinnchance gegen Bots, ist aber für Menschen sehr durchaschaubar.
-	  Zufällig ist die Gewinnchance gegen Bots etwas geringer, dafür ist er gegen Menschen sehr viel besser 
-	  (Dies kann nur durch den Return-Wert der SmartBot->move() Methode gewechselt werden. Alternativ hätte natürlich eine
-	   neue klasse erstellt werden können, die sich nur in Namen und Return-Wert unterscheidet)
-	  Da die Chancen auf ein Draw bei TickTackToe sehr hoch sind (vor allem falls winSize = fieldSize und große Felder), werden diese bei der Gewinnquote 
-	  nicht mitberechnet.
-	  PS: Der SmartBot kann ürigens nur durch eine Zwickmühle geschlagen werden
+	  Trifft keine der beiden FÃ¤lle auf kann er entweder zufÃ¤llig (RandomBot) oder in einer Reihenfolge(StupidBot, aber rÃ¼ckwÃ¤rts) agieren.
+	  In Reihenfolge hat hierbei eine etwas hÃ¶here Gewinnchance gegen Bots, ist aber fÃ¼r Menschen sehr durchaschaubar.
+	  ZufÃ¤llig ist die Gewinnchance gegen Bots etwas geringer, dafÃ¼r ist er gegen Menschen sehr viel besser 
+	  (Dies kann nur durch den Return-Wert der SmartBot->move() Methode gewechselt werden. Alternativ hÃ¤tte natÃ¼rlich eine
+	   neue klasse erstellt werden kÃ¶nnen, die sich nur in Namen und Return-Wert unterscheidet)
+Die move Methode Ã¼bergibt jeweils ein Tupel der Koordination (so kÃ¶nnen X-und Y-Wert einfach als Paar Ã¼bergeben werden).
+Dieses wird (falls mÃ¶glich) gesetzt und entsprechendes Feld aus der BlankList entfernt.
+Ist die WinCondition, ist der andere Spieler am Zug und der SpaÃŸ wird wiederholt.
 
-hierbei wird ziehen die Spieler immer abwechselnd, bis 
-	1. ein Draw eingetreten ist (alle Felder voll
-   oder 2. ein Spieler gewonnen hat
-Dies wird durch den namespace CheckWin überprüft (namespace, da die Methode sowohl in GameControl als auch beim SmartBot benötigt wird
-und kein zusätzliches Objekt hierfür benötigt wird). Dieser überprüft das Feld an der gesetzen Position nach Reihen/Spalten/Diagonalen, 
-und beendet bei einer Folge, die der winSize entspricht, das Spiel.
+Die WinCondition ist durch den Namespace checkWin realisiert, wodurch die Methoden ausgelagert werden kÃ¶nnen und sowohl von
+GameControl als auch SmartBot verwendet werden kÃ¶nnen. Durch die Methode checkWin::all(..) wird Ã¼berprÃ¼ft, ob der Spieler 
+Diagonal/ in Reihe/ in Spalte gewonnen hat. In diesem Fall wird das spielt beendet und der Gewinner an das Main zu-
+rÃ¼ckgegeben.
+Desweiteren wird auf ein Draw Ã¼beprÃ¼ft, sollten alle Felder besetzt sein.
 
-Die Benutzung des Programms ist durch ein Konsolenmenü geregelt und selbsterklären. Statische Daten wie fieldSize sind desweiteren im
-StaticData-namespace durch einen Header abrufbar, damit sie nicht an jedes Objekt übergeben werden müssen.
-Zusätzlich gibt es ein Unit-Tests, welche im Test-Projekt ausgeführt werden können.
+Durch die Test-Option im HauptmenÃ¼ kÃ¶nnen 2 auswÃ¤hlbare Bots gegeneinander mit beliebig vielen Iteration/ beliebter fieldSize/winSize
+gegeneinander antreten und Ergebnisse ausgewertet werden.
+Reminder: Der SmartBot agiert SEHR resourcen-verschwenderisch. Dementsprechend lange sind Rechenzeit fÃ¼r groÃŸe Felder bzw viele Iterationen.
+(Er arbeitet mit o(n^3) pro Zug). Ein 10x10 Feld mit 1000 Iteration dauert etwa 20min. 
 
-Reminder: 
-Da der SmartBot nicht wirklich effizient arbeitet (er geht ja alle freien Felder einmal durch und überprüft die WinCondition), dauert es
- für große Felder (8+), eine hohe Anzahl an Iterationen enstprechend lange bis die Ergebnisse eines bot-tests fertig sind 
-(bei 10x10, 1000 Iterations ~20min). Dementsprechend dauert auch das Test-File einige Minuten, da es von 3x3 bis 6x6 testet
+Die Benutzung des Programms ist durch ein KonsolenmenÃ¼ geregelt und selbsterklÃ¤rend (lediglich die Auswahl des Returns des SmartBot wird im Code geregelt).
+
+Des weiteren kÃ¶nnen im Projekt Test Unit Tests zu den einzelnen Funktionen ausgefÃ¼hrt werden. 
+Bei den unit Tests zu den winrates des SmartBot werden nur Siege/Niederlagen berÃ¼cksichtigt,da es bei TickTackToe sehr hÃ¤ufig zu draws kommt.
+Aufgrund dieser Tests dauert das Test-Programm aufgrund der KomplexitÃ¤t des SmartBot auch einige Minuten.
+
+
 
 
